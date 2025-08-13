@@ -28,13 +28,18 @@ venv/
 env/
 ENV/
 
+# Ignore Python cache files in virtual environment
+VNTrading_env/**/__pycache__/
+VNTrading_env/**/*.pyc
+VNTrading_env/**/*.pyo
+
 # Logs
 logs/
 *.log
 RunningLog/
 
 # Data files (optional - uncomment if you don't want to track data files)
-# data/
+# data/ - commented out to track data folder
 
 # IDE
 .vscode/
