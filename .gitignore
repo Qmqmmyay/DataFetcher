@@ -22,8 +22,8 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Virtual Environment
-VNTrading_env/
+# Virtual Environment (keeping VNTrading_env for offline packages)
+# VNTrading_env/
 venv/
 env/
 ENV/
