@@ -1,6 +1,38 @@
 #!/bin/bash
 
-# Complete setup scri    exit 1
+# Complete setup script for VNTrading DataFetcher on a new computer
+# Run this script after copying the project to ~/VNTrading_DataFetcher/
+
+set -e
+
+echo "🚀 Setting up VNTrading DataFetcher on new computer..."
+echo "=============================================="
+
+# Get the current directory (should be ~/VNTrading_DataFetcher)
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+echo "� Project directory: $PROJECT_DIR"
+
+# Check if we're in the home directory (recommended location)
+if [[ "$PROJECT_DIR" != "$HOME/VNTrading_DataFetcher" ]]; then
+    echo "⚠️  Warning: Project is not in recommended location!"
+    echo "   Current: $PROJECT_DIR"
+    echo "   Recommended: $HOME/VNTrading_DataFetcher"
+    echo "   LaunchAgents work best when project is in home directory."
+    echo ""
+    read -p "Continue anyway? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Please move project to $HOME/VNTrading_DataFetcher and run again:"
+        echo "  mv \"$PROJECT_DIR\" \"$HOME/VNTrading_DataFetcher\""
+        exit 1
+    fi
+fi
+
+# Check if Python 3 is available
+if ! command -v python3 &> /dev/null; then
+    echo "❌ Python 3 is not installed. Please install Python 3.8+ first."
+    echo "   Visit: https://www.python.org/downloads/"
+    exit 1
 fi
 
 PYTHON_VERSION=$(python3 --version)
@@ -36,57 +68,37 @@ if [ -d "VNTrading_env" ]; then
         fi
     fi
     
-    echo "🔧 Updating environment paths instead of recreating (to preserve offline packages)..."rading DataFetcher on a new computer
-# Run this script after copying the project to ~/VNTrading_DataFetcher/
-
-set -e
-
-echo "🚀 Setting up VNTrading DataFetcher on new computer..."
-echo "=============================================="
-
-# Get the current directory (should be ~/VNTrading_DataFetcher)
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-echo "📁 Project directory: $PROJECT_DIR"
-
-# Check if we're in the home directory (recommended location)
-if [[ "$PROJECT_DIR" != "$HOME/VNTrading_DataFetcher" ]]; then
-    echo "⚠️  Warning: Project is not in recommended location!"
-    echo "   Current: $PROJECT_DIR"
-    echo "   Recommended: $HOME/VNTrading_DataFetcher"
-    echo "   LaunchAgents work best when project is in home directory."
-    echo ""
-    read -p "Continue anyway? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo "Please move project to $HOME/VNTrading_DataFetcher and run again:"
-        echo "  mv \"$PROJECT_DIR\" \"$HOME/VNTrading_DataFetcher\""
-        exit 1
-    fi
-fi
-
-# Check if Python 3 is available
-if ! command -v python3 &> /dev/null; then
-    echo "❌ Python 3 is not installed. Please install Python 3.8+ first."
-    echo "   Visit: https://www.python.org/downloads/"
-    exit 1
-fi
-
-PYTHON_VERSION=$(python3 --version)
-echo "✅ Found Python: $PYTHON_VERSION"
-
-# Check if virtual environment exists with offline packages
-if [ -d "VNTrading_env" ]; then
-    echo "🎯 Found existing virtual environment with offline Vietnamese packages"
-    echo "� Updating environment paths instead of recreating (to preserve offline packages)..."
+    echo "🔧 Updating environment paths instead of recreating (to preserve offline packages)..."
     
-    # Update the virtual environment to work with current system
-    echo "🔧 Updating virtual environment paths for new system..."
-    python3 -m venv VNTrading_env --upgrade-deps
-    echo "✅ Virtual environment updated and paths fixed"
+    # Update the virtual environment to work with current system (SAFE method)
+    echo "� Fixing virtual environment paths for new system..."
+    
+    # First, try the gentle approach - just update pyvenv.cfg
+    if [ -f "VNTrading_env/pyvenv.cfg" ]; then
+        # Update the home path to current Python
+        PYTHON_PATH=$(which python3)
+        PYTHON_HOME=$(dirname $(dirname $PYTHON_PATH))
+        sed -i.bak "s|home = .*|home = $PYTHON_HOME|g" VNTrading_env/pyvenv.cfg
+        echo "✅ Updated pyvenv.cfg with current Python path"
+    fi
+    
+    # Test if packages still work before doing anything drastic
+    source VNTrading_env/bin/activate
+    if python -c "import vnstock_ta, vnai, vnii" 2>/dev/null; then
+        echo "✅ Vietnamese packages still working after path update!"
+        VN_PACKAGES_TEST_PASSED=true
+    else
+        echo "⚠️  Vietnamese packages need restoration after path update"
+        VN_PACKAGES_TEST_PASSED=false
+        # Only if absolutely necessary, use --upgrade-deps
+        python3 -m venv VNTrading_env --upgrade-deps
+        echo "🔧 Applied --upgrade-deps as fallback"
+    fi
 else
     echo "📦 Creating new virtual environment (no existing environment found)..."
     python3 -m venv VNTrading_env
     echo "⚠️  Note: Created fresh environment - offline Vietnamese packages not available"
+    VN_PACKAGES_TEST_PASSED=false
 fi
 
 # Activate virtual environment
@@ -99,6 +111,12 @@ if python -c "import vnstock_ta, vnai, vnii" 2>/dev/null; then
     echo "🇻🇳 ✅ Offline Vietnamese packages found and working!"
     echo "   • vnstock_ta, vnai, vnii are available"
     echo "   • Skipping package installation (offline packages preserved)"
+    VN_PACKAGES_AVAILABLE=true
+elif [ "$VN_PACKAGES_TEST_PASSED" = true ]; then
+    # Packages were working before, so they should still be there
+    echo "🇻🇳 ✅ Offline Vietnamese packages preserved (verified earlier)"
+    echo "   • Package test passed before virtual env update"
+    echo "   • Skipping package installation"
     VN_PACKAGES_AVAILABLE=true
 else
     echo "⚠️  Offline Vietnamese packages not found"
