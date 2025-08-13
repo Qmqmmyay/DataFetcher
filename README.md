@@ -50,8 +50,8 @@ This repository is **unique** because it includes a complete Python virtual envi
 **📋 For detailed setup instructions, see [README_SETUP_MACOS.md](README_SETUP_MACOS.md)**
 
 ```bash
-# 1. Clone repository
-cd /Users/yourusername/
+# 1. Clone repository (replace 'yourusername' with your actual username!)
+cd /Users/$(whoami)/
 git clone https://github.com/Qmqmmyay/DataFetcher.git VNTrading_DataFetcher
 cd VNTrading_DataFetcher
 
