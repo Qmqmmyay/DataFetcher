@@ -46,22 +46,30 @@
    cd VNTrading_DataFetcher
    ```
 
-2. **Activate included environment:**
+2. **Fix virtual environment paths (REQUIRED):**
    ```bash
+   # The included virtual environment has hardcoded paths that need updating
+   python3 -m venv VNTrading_env --upgrade-deps
    source VNTrading_env/bin/activate
    ```
 
-3. **Test the offline packages:**
+3. **Install missing packages (if needed):**
+   ```bash
+   # Most packages are already included, but some binaries may need reinstalling
+   pip install --force-reinstall vnstock vnstock-ta vnai vnii
+   ```
+
+4. **Test the offline packages:**
    ```bash
    python -c "import vnstock, vnstock_ta, vnai, vnii; print('All VN packages loaded successfully!')"
    ```
 
-4. **Setup automation (macOS only):**
+5. **Setup automation (macOS only):**
    ```bash
    ./setup_launchd.sh
    ```
 
-### Option 2: Fresh Setup (NOT RECOMMENDED)
+### Option 2: Fresh Setup (NOT RECOMMENDED - Loses Offline Packages)
 
 ⚠️ **Warning: You will lose access to offline VN packages!**
 
@@ -176,10 +184,19 @@ VNTrading_DataFetcher/
 
 ## 🆘 Troubleshooting
 
+### "Virtual Environment Path Errors"
+```bash
+# Virtual environments have hardcoded paths - this is normal!
+# Fix by upgrading the environment:
+python3 -m venv VNTrading_env --upgrade-deps
+source VNTrading_env/bin/activate
+```
+
 ### "VN Package Import Errors"
 ```bash
-# Ensure you're using the included environment:
+# Ensure you're using the updated environment:
 source VNTrading_env/bin/activate
+pip install --force-reinstall vnstock vnstock-ta vnai vnii
 python -c "import vnstock; print('VN packages available!')"
 ```
 
