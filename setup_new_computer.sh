@@ -26,7 +26,7 @@ fi
 
 # Get the current directory (should be ~/VNTrading_DataFetcher)
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-echo "📁 Project directory: $PROJECT_DIR"
+echo " Project directory: $PROJECT_DIR"
 
 # Check if we're in the home directory (recommended location)
 if [[ "$PROJECT_DIR" != "$HOME/VNTrading_DataFetcher" ]]; then
@@ -86,29 +86,77 @@ if [ -d "VNTrading_env" ]; then
     
     echo "🔧 Updating environment paths instead of recreating (to preserve offline packages)..."
     
-    # Update the virtual environment to work with current system (SAFE method)
-    echo "🔧 Fixing virtual environment paths for new system..."
+    # Robust virtual environment path fixing for shared environments
+    echo "🔧 Applying robust path fixes for cloned virtual environment..."
     
-    # First, try the gentle approach - just update pyvenv.cfg
-    if [ -f "VNTrading_env/pyvenv.cfg" ]; then
-        # Update the home path to current Python
-        PYTHON_PATH=$(which python3)
-        PYTHON_HOME=$(dirname $(dirname $PYTHON_PATH))
-        sed -i.bak "s|home = .*|home = $PYTHON_HOME|g" VNTrading_env/pyvenv.cfg
-        echo "✅ Updated pyvenv.cfg with current Python path"
-    fi
+    # Function to fix virtual environment paths
+    fix_venv_paths() {
+        local current_project_dir="$1"
+        local python_executable=$(which python3)
+        local python_home=$(dirname $(dirname $python_executable))
+        
+        echo "   🔧 Fixing pyvenv.cfg..."
+        if [ -f "VNTrading_env/pyvenv.cfg" ]; then
+            # Update home path and executable path
+            sed -i.bak "s|home = .*|home = $python_home|g" VNTrading_env/pyvenv.cfg
+            sed -i.bak2 "s|executable = .*|executable = $python_executable|g" VNTrading_env/pyvenv.cfg
+        fi
+        
+        echo "   🔧 Fixing activation scripts..."
+        # Fix activate script
+        if [ -f "VNTrading_env/bin/activate" ]; then
+            sed -i.bak "s|VIRTUAL_ENV=.*|VIRTUAL_ENV=\"$current_project_dir/VNTrading_env\"|g" VNTrading_env/bin/activate
+        fi
+        
+        # Fix Python symlinks
+        echo "   🔧 Recreating Python symlinks..."
+        if [ -f "VNTrading_env/bin/python" ]; then
+            rm -f VNTrading_env/bin/python VNTrading_env/bin/python3 VNTrading_env/bin/python3.*
+            ln -sf "$python_executable" VNTrading_env/bin/python
+            ln -sf "$python_executable" VNTrading_env/bin/python3
+            # Create specific version link if needed
+            if [[ "$python_executable" == *python3.* ]]; then
+                local python_version=$(basename "$python_executable")
+                ln -sf "$python_executable" "VNTrading_env/bin/$python_version"
+            fi
+        fi
+        
+        echo "   🔧 Fixing pip and site-packages paths..."
+        # Force pip to recognize the new location
+        if [ -f "VNTrading_env/bin/pip" ]; then
+            # Update pip's shebang line
+            sed -i.bak "1s|.*|#!$current_project_dir/VNTrading_env/bin/python|" VNTrading_env/bin/pip
+        fi
+        
+        echo "   ✅ Path fixing completed"
+    }
     
-    # Test if packages still work before doing anything drastic
+    # Apply the robust path fixes
+    fix_venv_paths "$PROJECT_DIR"
+    
+    # Test if packages work after aggressive path fixing
+    echo "🧪 Testing Vietnamese packages after path fixes..."
     source VNTrading_env/bin/activate
-    if PYTHONIOENCODING=utf-8 python -c "import vnstock_ta, vnai, vnii" 2>/dev/null; then
-        echo "✅ Vietnamese packages still working after path update!"
+    if PYTHONIOENCODING=utf-8 python -c "import vnstock_ta, vnai, vnii; print('✅ All Vietnamese packages working!')" 2>/dev/null; then
+        echo "🇻🇳 ✅ Vietnamese packages successfully restored!"
         VN_PACKAGES_TEST_PASSED=true
     else
-        echo "⚠️  Vietnamese packages need restoration after path update"
-        VN_PACKAGES_TEST_PASSED=false
-        # Only if absolutely necessary, use --upgrade-deps
-        PYTHONIOENCODING=utf-8 python3 -m venv VNTrading_env --upgrade-deps
-        echo "🔧 Applied --upgrade-deps as fallback"
+        echo "⚠️  Vietnamese packages still not working, trying pip fix..."
+        # Last resort: try to fix pip internal issues
+        PYTHONIOENCODING=utf-8 python -m ensurepip --upgrade 2>/dev/null || true
+        
+        # Test again
+        if PYTHONIOENCODING=utf-8 python -c "import vnstock_ta, vnai, vnii" 2>/dev/null; then
+            echo "🇻🇳 ✅ Vietnamese packages working after pip fix!"
+            VN_PACKAGES_TEST_PASSED=true
+        else
+            echo "⚠️  Vietnamese packages need complete restoration"
+            VN_PACKAGES_TEST_PASSED=false
+            # Only as absolute last resort, recreate the environment
+            echo "🔧 Recreating environment while preserving packages..."
+            PYTHONIOENCODING=utf-8 python3 -m venv VNTrading_env --upgrade-deps
+            echo "🔧 Applied --upgrade-deps as final fallback"
+        fi
     fi
 else
     echo "📦 Creating new virtual environment (no existing environment found)..."
@@ -122,9 +170,27 @@ source VNTrading_env/bin/activate
 echo "✅ Virtual environment activated"
 
 # Check if Vietnamese packages are available (indicating offline packages preserved)
-echo "🔍 Checking for Vietnamese trading packages..."
+echo "🔍 Final validation of Vietnamese trading packages..."
+
+# Comprehensive package test
+test_vietnamese_packages() {
+    echo "   📦 Testing vnstock_ta..."
+    python -c "import vnstock_ta; print(f'   ✅ vnstock_ta {vnstock_ta.__version__ if hasattr(vnstock_ta, \"__version__\") else \"(installed)\"}')" 2>/dev/null || echo "   ❌ vnstock_ta failed"
+    
+    echo "   📦 Testing vnai..."  
+    python -c "import vnai; print(f'   ✅ vnai {vnai.__version__ if hasattr(vnai, \"__version__\") else \"(installed)\"}')" 2>/dev/null || echo "   ❌ vnai failed"
+    
+    echo "   📦 Testing vnii..."
+    python -c "import vnii; print(f'   ✅ vnii {vnii.__version__ if hasattr(vnii, \"__version__\") else \"(installed)\"}')" 2>/dev/null || echo "   ❌ vnii failed"
+    
+    echo "   📦 Testing vnstock_data..."
+    python -c "import vnstock_data; print(f'   ✅ vnstock_data {vnstock_data.__version__ if hasattr(vnstock_data, \"__version__\") else \"(installed)\"}')" 2>/dev/null || echo "   ❌ vnstock_data failed"
+}
+
 if python -c "import vnstock_ta, vnai, vnii" 2>/dev/null; then
     echo "🇻🇳 ✅ Offline Vietnamese packages found and working!"
+    echo "   • Testing all Vietnamese packages:"
+    test_vietnamese_packages
     echo "   • vnstock_ta, vnai, vnii are available"
     echo "   • Skipping package installation (offline packages preserved)"
     VN_PACKAGES_AVAILABLE=true
@@ -211,6 +277,15 @@ echo "📊 Checking project integrity..."
 echo "   Database: $(ls -lh data/trading_system.db 2>/dev/null | awk '{print $5}' || echo 'not found')"
 echo "   Python files: $(find . -name "*.py" | wc -l | tr -d ' ') files"
 echo "   Shell scripts: $(find . -name "*.sh" | wc -l | tr -d ' ') files"
+echo "   Virtual env size: $(du -sh VNTrading_env 2>/dev/null | awk '{print $1}' || echo 'unknown')"
+
+# Final system compatibility check
+echo "🔍 System compatibility summary:"
+echo "   • Operating System: $OSTYPE"
+echo "   • Python Version: $CURRENT_PYTHON_VERSION"
+echo "   • Project Location: $PROJECT_DIR"
+echo "   • Vietnamese Characters: $(echo 'thư mục' | wc -c | tr -d ' ') bytes (should be > 8)"
+echo "   • UTF-8 Support: $LANG"
 
 echo ""
 echo "🎉 Setup completed successfully!"
