@@ -6,6 +6,10 @@ def get_symbols_by_exchange(exchange):
     symbols = symbols[(symbols['exchange'] == exchange) & (symbols['type'] == 'STOCK')]
     return sorted(symbols.symbol.to_list())
 
+def get_all_hose_symbols():
+    """Return all HOSE symbols - alias for backward compatibility"""
+    return get_symbols_by_exchange('HSX')
+
 # 📈 Pull all listed symbols at initialization time
 HOSE_SYMBOLS = get_symbols_by_exchange('HSX')
 HNX_SYMBOLS = get_symbols_by_exchange('HNX')

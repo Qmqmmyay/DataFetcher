@@ -1,6 +1,42 @@
 #!/bin/bash
 
-# Complete setup script for VNTrading DataFetcher on a new computer
+# Complete setup scri    exit 1
+fi
+
+PYTHON_VERSION=$(python3 --version)
+echo "✅ Found Python: $PYTHON_VERSION"
+
+# Extract Python version (e.g., "3.12" from "Python 3.12.3")
+CURRENT_PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+echo "🔍 Python version: $CURRENT_PYTHON_VERSION"
+
+# Check if virtual environment exists with offline packages
+if [ -d "VNTrading_env" ]; then
+    echo "🎯 Found existing virtual environment with offline Vietnamese packages"
+    
+    # Check if Python versions match
+    if [ -f "VNTrading_env/pyvenv.cfg" ]; then
+        VENV_PYTHON_VERSION=$(grep "version = " VNTrading_env/pyvenv.cfg | sed 's/version = //' | cut -d'.' -f1,2)
+        echo "📋 Virtual env was created with Python: $VENV_PYTHON_VERSION"
+        echo "📋 Current system has Python: $CURRENT_PYTHON_VERSION"
+        
+        if [ "$VENV_PYTHON_VERSION" != "$CURRENT_PYTHON_VERSION" ]; then
+            echo "⚠️  WARNING: Python version mismatch!"
+            echo "   Virtual env: Python $VENV_PYTHON_VERSION"
+            echo "   Current system: Python $CURRENT_PYTHON_VERSION"
+            echo "   Vietnamese packages may not work due to binary incompatibility"
+            echo ""
+            read -p "Continue with version mismatch? (y/N): " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo "❌ Setup cancelled. Consider using a system with Python $VENV_PYTHON_VERSION"
+                echo "   Or re-clone the repository to get a fresh environment"
+                exit 1
+            fi
+        fi
+    fi
+    
+    echo "🔧 Updating environment paths instead of recreating (to preserve offline packages)..."rading DataFetcher on a new computer
 # Run this script after copying the project to ~/VNTrading_DataFetcher/
 
 set -e
