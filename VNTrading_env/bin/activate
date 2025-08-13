@@ -14,6 +14,15 @@ deactivate () {
         unset _OLD_VIRTUAL_PYTHONHOME
     fi
 
+    # Restore PYTHONPATH
+    if [ -n "${_OLD_PYTHONPATH:-}" ] ; then
+        PYTHONPATH="${_OLD_PYTHONPATH:-}"
+        export PYTHONPATH
+        unset _OLD_PYTHONPATH
+    else
+        unset PYTHONPATH
+    fi
+
     # Call hash to forget past commands. Without forgetting
     # past commands the $PATH changes we made may not be respected
     hash -r 2> /dev/null
@@ -48,6 +57,18 @@ fi
 _OLD_VIRTUAL_PATH="$PATH"
 PATH="$VIRTUAL_ENV/bin:$PATH"
 export PATH
+
+# Add virtual environment site-packages to PYTHONPATH
+_OLD_PYTHONPATH="$PYTHONPATH"
+PYTHONPATH="$VIRTUAL_ENV/lib/python3.12/site-packages:$PYTHONPATH"
+export PYTHONPATH
+
+# Make sure to unset PYTHONPATH on deactivate
+if [ -n "${_OLD_VIRTUAL_ENV_PYTHONPATH:-}" ] ; then
+    PYTHONPATH="${_OLD_VIRTUAL_ENV_PYTHONPATH:-}"
+    export PYTHONPATH
+    unset _OLD_VIRTUAL_ENV_PYTHONPATH
+fi
 
 # unset PYTHONHOME if set
 # this will fail if PYTHONHOME is set to the empty string (which is bad anyway)
