@@ -3,14 +3,30 @@
 # Complete setup script for VNTrading DataFetcher on a new computer
 # Run this script after copying the project to ~/VNTrading_DataFetcher/
 
+# Set UTF-8 encoding to handle Vietnamese folder names
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export PYTHONIOENCODING=utf-8
+
 set -e
 
 echo "🚀 Setting up VNTrading DataFetcher on new computer..."
 echo "=============================================="
 
+# Check locale and fix UTF-8 handling for Vietnamese characters
+echo "🌏 Configuring locale for Vietnamese character support..."
+if ! locale -a | grep -q "en_US.UTF-8"; then
+    echo "⚠️  UTF-8 locale not available, using C.UTF-8 as fallback"
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+else
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+fi
+
 # Get the current directory (should be ~/VNTrading_DataFetcher)
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-echo "� Project directory: $PROJECT_DIR"
+echo "📁 Project directory: $PROJECT_DIR"
 
 # Check if we're in the home directory (recommended location)
 if [[ "$PROJECT_DIR" != "$HOME/VNTrading_DataFetcher" ]]; then
@@ -71,7 +87,7 @@ if [ -d "VNTrading_env" ]; then
     echo "🔧 Updating environment paths instead of recreating (to preserve offline packages)..."
     
     # Update the virtual environment to work with current system (SAFE method)
-    echo "� Fixing virtual environment paths for new system..."
+    echo "🔧 Fixing virtual environment paths for new system..."
     
     # First, try the gentle approach - just update pyvenv.cfg
     if [ -f "VNTrading_env/pyvenv.cfg" ]; then
@@ -84,19 +100,19 @@ if [ -d "VNTrading_env" ]; then
     
     # Test if packages still work before doing anything drastic
     source VNTrading_env/bin/activate
-    if python -c "import vnstock_ta, vnai, vnii" 2>/dev/null; then
+    if PYTHONIOENCODING=utf-8 python -c "import vnstock_ta, vnai, vnii" 2>/dev/null; then
         echo "✅ Vietnamese packages still working after path update!"
         VN_PACKAGES_TEST_PASSED=true
     else
         echo "⚠️  Vietnamese packages need restoration after path update"
         VN_PACKAGES_TEST_PASSED=false
         # Only if absolutely necessary, use --upgrade-deps
-        python3 -m venv VNTrading_env --upgrade-deps
+        PYTHONIOENCODING=utf-8 python3 -m venv VNTrading_env --upgrade-deps
         echo "🔧 Applied --upgrade-deps as fallback"
     fi
 else
     echo "📦 Creating new virtual environment (no existing environment found)..."
-    python3 -m venv VNTrading_env
+    PYTHONIOENCODING=utf-8 python3 -m venv VNTrading_env
     echo "⚠️  Note: Created fresh environment - offline Vietnamese packages not available"
     VN_PACKAGES_TEST_PASSED=false
 fi
@@ -123,17 +139,17 @@ else
     echo "📚 Installing basic packages from requirements.txt..."
     VN_PACKAGES_AVAILABLE=false
     
-    # Upgrade pip
+    # Upgrade pip with proper encoding
     echo "⬆️  Upgrading pip..."
-    pip install --upgrade pip > /dev/null 2>&1
+    PYTHONIOENCODING=utf-8 pip install --upgrade pip > /dev/null 2>&1
     
     # Install required packages
     if [ -f "requirements.txt" ]; then
-        pip install -r requirements.txt > /dev/null 2>&1
+        PYTHONIOENCODING=utf-8 pip install -r requirements.txt > /dev/null 2>&1
         echo "✅ Installed packages from requirements.txt"
         echo "⚠️  Note: Only basic packages installed - Vietnamese trading packages not available"
     else
-        pip install vnstock pandas openpyxl beautifulsoup4 requests > /dev/null 2>&1
+        PYTHONIOENCODING=utf-8 pip install vnstock pandas openpyxl beautifulsoup4 requests > /dev/null 2>&1
         echo "✅ Installed default packages"
     fi
 fi
