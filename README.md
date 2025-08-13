@@ -47,30 +47,33 @@ This repository is **unique** because it includes a complete Python virtual envi
 
 ## ⚡ **Quick Start**
 
+**📋 For detailed setup instructions, see [README_SETUP_MACOS.md](README_SETUP_MACOS.md)**
+
 ```bash
 # 1. Clone repository
 cd /Users/yourusername/
 git clone https://github.com/Qmqmmyay/DataFetcher.git VNTrading_DataFetcher
 cd VNTrading_DataFetcher
 
-# 2. Option A: Automated setup (RECOMMENDED - preserves VN packages)
+# 2. Run the safe setup script (preserves Vietnamese packages)
 ./setup_new_computer.sh
 
-# 2. Option B: Manual setup (alternative)
-python3 -m venv VNTrading_env --upgrade-deps
-source VNTrading_env/bin/activate
-
-# 3. Test Vietnamese packages
-python -c "import vnstock, vnstock_ta, vnai, vnii; print('✅ All VN packages loaded!')"
-
-# 4. Setup automation (macOS only)
+# 3. Setup automation (macOS only)
 ./setup_launchd.sh
 
-# 5. Manual test run
+# 4. Test everything works
 ./run_etl.sh
 ```
 
-## 📁 **Project Structure**
+**🚨 Need help? See the comprehensive [macOS Setup Guide](README_SETUP_MACOS.md) for detailed instructions, troubleshooting, and best practices.**
+
+## � **Documentation**
+
+- **[📋 Complete Setup Guide](README_SETUP_MACOS.md)** - Comprehensive macOS setup with troubleshooting
+- **[📊 Transfer Checklist](TRANSFER_CHECKLIST.md)** - Moving to new computer checklist
+- **[🔧 Validation Script](validate_transfer.sh)** - Verify setup after transfer
+
+## �📁 **Project Structure**
 
 ```
 VNTrading_DataFetcher/                 # 760MB total
@@ -198,10 +201,12 @@ This project includes proprietary Vietnamese trading packages. Please respect th
 ## 📞 **Support**
 
 For issues:
-1. 📋 Check [Setup Guide](README_SETUP.md)
+1. 📋 Check [Complete Setup Guide](README_SETUP_MACOS.md)
 2. 📊 Review `RunningLog/cron_etl.log`
 3. 🔍 Verify Vietnamese package imports
 4. 🖥️ Confirm macOS LaunchAgent status
+
+**📚 For comprehensive troubleshooting, see [README_SETUP_MACOS.md](README_SETUP_MACOS.md)**
 
 ---
 
