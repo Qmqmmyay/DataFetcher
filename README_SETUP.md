@@ -85,19 +85,23 @@ This script is now **safe to use** and won't destroy your offline Vietnamese pac
    ./setup_launchd.sh
    ```
 
-### Option 2: Fresh Setup (NOT RECOMMENDED - Loses Offline Packages)
+### Option 2: Automated Setup Script (SAFE - Preserves VN Packages)
 
-⚠️ **Warning: You will lose access to offline VN packages!**
+✅ **Updated: Now preserves offline Vietnamese packages!**
 
-### Option 2: Fresh Setup (NOT RECOMMENDED)
-
-⚠️ **Warning: You will lose access to offline VN packages!**
-
-Only use this if you don't need the Vietnamese trading packages:
+The setup script has been updated to intelligently preserve existing packages:
 
 ```bash
 ./setup_new_computer.sh
 ```
+
+**What it does:**
+- ✅ **Preserves existing virtual environment** if it contains offline VN packages
+- ✅ **Updates paths** using `python3 -m venv --upgrade-deps` 
+- ✅ **Detects Vietnamese packages** and skips installation if found
+- ✅ **Only installs basic packages** if starting fresh
+
+This script is now **safe to use** and won't destroy your offline Vietnamese packages!
 
 ## 🔍 Verifying Your Setup
 
