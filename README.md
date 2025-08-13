@@ -53,7 +53,10 @@ cd /Users/yourusername/
 git clone https://github.com/Qmqmmyay/DataFetcher.git VNTrading_DataFetcher
 cd VNTrading_DataFetcher
 
-# 2. Fix virtual environment paths for new system
+# 2. Option A: Automated setup (RECOMMENDED - preserves VN packages)
+./setup_new_computer.sh
+
+# 2. Option B: Manual setup (alternative)
 python3 -m venv VNTrading_env --upgrade-deps
 source VNTrading_env/bin/activate
 

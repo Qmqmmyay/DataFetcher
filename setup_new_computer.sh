@@ -38,32 +38,50 @@ fi
 PYTHON_VERSION=$(python3 --version)
 echo "✅ Found Python: $PYTHON_VERSION"
 
-# Remove old virtual environment if it exists
+# Check if virtual environment exists with offline packages
 if [ -d "VNTrading_env" ]; then
-    echo "🗑️  Removing old virtual environment..."
-    rm -rf VNTrading_env
+    echo "🎯 Found existing virtual environment with offline Vietnamese packages"
+    echo "� Updating environment paths instead of recreating (to preserve offline packages)..."
+    
+    # Update the virtual environment to work with current system
+    echo "🔧 Updating virtual environment paths for new system..."
+    python3 -m venv VNTrading_env --upgrade-deps
+    echo "✅ Virtual environment updated and paths fixed"
+else
+    echo "📦 Creating new virtual environment (no existing environment found)..."
+    python3 -m venv VNTrading_env
+    echo "⚠️  Note: Created fresh environment - offline Vietnamese packages not available"
 fi
-
-# Create new virtual environment
-echo "📦 Creating new virtual environment..."
-python3 -m venv VNTrading_env
 
 # Activate virtual environment
 source VNTrading_env/bin/activate
-echo "✅ Virtual environment created and activated"
+echo "✅ Virtual environment activated"
 
-# Upgrade pip
-echo "⬆️  Upgrading pip..."
-pip install --upgrade pip > /dev/null 2>&1
-
-# Install required packages
-echo "📚 Installing Python packages..."
-if [ -f "requirements.txt" ]; then
-    pip install -r requirements.txt > /dev/null 2>&1
-    echo "✅ Installed packages from requirements.txt"
+# Check if Vietnamese packages are available (indicating offline packages preserved)
+echo "🔍 Checking for Vietnamese trading packages..."
+if python -c "import vnstock_ta, vnai, vnii" 2>/dev/null; then
+    echo "🇻🇳 ✅ Offline Vietnamese packages found and working!"
+    echo "   • vnstock_ta, vnai, vnii are available"
+    echo "   • Skipping package installation (offline packages preserved)"
+    VN_PACKAGES_AVAILABLE=true
 else
-    pip install vnstock pandas openpyxl beautifulsoup4 requests > /dev/null 2>&1
-    echo "✅ Installed default packages"
+    echo "⚠️  Offline Vietnamese packages not found"
+    echo "📚 Installing basic packages from requirements.txt..."
+    VN_PACKAGES_AVAILABLE=false
+    
+    # Upgrade pip
+    echo "⬆️  Upgrading pip..."
+    pip install --upgrade pip > /dev/null 2>&1
+    
+    # Install required packages
+    if [ -f "requirements.txt" ]; then
+        pip install -r requirements.txt > /dev/null 2>&1
+        echo "✅ Installed packages from requirements.txt"
+        echo "⚠️  Note: Only basic packages installed - Vietnamese trading packages not available"
+    else
+        pip install vnstock pandas openpyxl beautifulsoup4 requests > /dev/null 2>&1
+        echo "✅ Installed default packages"
+    fi
 fi
 
 # Create necessary directories
@@ -126,6 +144,20 @@ echo "   Shell scripts: $(find . -name "*.sh" | wc -l | tr -d ' ') files"
 
 echo ""
 echo "🎉 Setup completed successfully!"
+echo ""
+
+# Display Vietnamese package status
+if [ "$VN_PACKAGES_AVAILABLE" = true ]; then
+    echo "🇻🇳 Vietnamese Trading Packages Status: ✅ AVAILABLE"
+    echo "   • Offline packages preserved: vnstock_ta, vnai, vnii, vnstock_data, etc."
+    echo "   • Full Vietnamese market analysis capabilities enabled"
+else
+    echo "🇻🇳 Vietnamese Trading Packages Status: ⚠️  LIMITED"
+    echo "   • Only basic vnstock available from PyPI"
+    echo "   • Advanced Vietnamese packages (vnstock_ta, vnai, vnii) not available"
+    echo "   • Consider cloning fresh repository to get offline packages"
+fi
+
 echo ""
 echo "📋 Next steps:"
 echo "   1. Test manual ETL run: ./run_etl.sh"  

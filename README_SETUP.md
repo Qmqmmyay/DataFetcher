@@ -2,7 +2,23 @@
 
 ## ⚠️ CRITICAL WARNINGS
 
-### 🚨 INCLUDED VIRTUAL ENVIRONMENT
+### 🚨 INCL### Option 2: Automated Setup Script (SAFE - Preserves VN Packages)
+
+✅ **Updated: Now preserves offline Vietnamese packages!**
+
+The setup script has been updated to intelligently preserve existing packages:
+
+```bash
+./setup_new_computer.sh
+```
+
+**What it does:**
+- ✅ **Preserves existing virtual environment** if it contains offline VN packages
+- ✅ **Updates paths** using `python3 -m venv --upgrade-deps` 
+- ✅ **Detects Vietnamese packages** and skips installation if found
+- ✅ **Only installs basic packages** if starting fresh
+
+This script is now **safe to use** and won't destroy your offline Vietnamese packages!UAL ENVIRONMENT
 **This repository includes a complete virtual environment (`VNTrading_env/`) with ALL Python packages pre-installed.**
 
 **Why?** This project uses **unreleased/offline Vietnamese trading libraries** that are NOT available on PyPI:
