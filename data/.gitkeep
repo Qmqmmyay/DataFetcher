@@ -1,0 +1,7 @@
+# This file ensures the data/ directory is tracked by Git
+# SQLite database and CSV files will be stored here
+# 
+# Files that will be created here:
+# - trading_system.db (SQLite database)
+# - *.csv (exported data files)
+# - *.xlsx (Excel export files)
