@@ -1,5 +1,5 @@
 home = /Users/doquangmanh/.pyenv
 include-system-site-packages = false
 version = 3.12.3
-executable = /Users/doquangmanh/.pyenv/shims/python3
+executable = /Users/doquangmanh/.pyenv/versions/3.12.3/bin/python3.12
 command = /Users/doquangmanh/.pyenv/versions/3.12.3/bin/python3 -m venv --upgrade-deps /Users/doquangmanh/VNTrading_DataFetcher/VNTrading_env
