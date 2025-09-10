@@ -1,19 +1,44 @@
-# 🇻🇳- 🚨 **What Makes This Project Special**
+# 🇻🇳- 🚨 **What Makes Th# Project Highlights
+
+This repo# Overview
+
+- 🔄 Daily Updates: Automated data collection at 15:00 (# Project Structure
+
+```
+VNTrading_DataFetcher/
+├── setup_new_computer.sh/bat     # Initial setup
+├── setup_launchd.sh/win.py      # Automation setup
+├── run_etl.sh/bat               # ETL execution
+├── data/                        # SQLite database
+├── RunningLog/                  # Reports and logs
+└── VNTrading_env/              # Vietnamese packages
+```
+
+� See [Database_Description.md](data/Database_Description.md) for schema details. Size: ~800MB (includes 578MB of offline Vietnamese packages)
+- 💻 Platforms: Windows & macOS supported
+- 📊 Output: SQLite database + Excel reports provides:
+
+- 📦 Offline Vietnamese Trading Packages (578MB, not available on PyPI)
+- 🤖 Cross-Platform Automation (Windows & macOS)
+- 📊 Production-Ready ETL Pipeline with error handling
+- 📈 Full Market Coverage: HOSE, HNX, UPCOM exchanges
+
+⚠️ See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed package list and requirements. Special**
 
 This repository is **unique** because it contains:
 
-- 📦 **578MB Vi## 🖥️ **Quick Requirements**
+- 📦 **578MB Vi# Requirements
 
 - Windows or macOS with Python 3.12+ (included in env)
 - ~800MB disk space
 - Install in home directory (NOT Desktop)
 - Admin rights for task scheduling
 
-## 📚 **Documentation**
+# Documentation
 
-- 📋 [Setup Guide](SETUP_GUIDE.md) - Detailed installation steps
-- ✅ [Transfer Checklist](TRANSFER_CHECKLIST.md) - Moving to new computer
-- 📊 [Database Schema](data/Database_Description.md) - Data structureonment** with offline Vietnamese trading packages
+- [Setup Guide](SETUP_GUIDE.md) - Detailed installation steps
+- [Transfer Checklist](TRANSFER_CHECKLIST.md) - Moving to new computer
+- [Database Schema](data/Database_Description.md) - Data structureonment** with offline Vietnamese trading packages
 - 🇻🇳 **Specialized VN Market Libraries** not available on PyPI
 - 🤖 **Cross-Platform Automated Collection** (Windows & macOS)
 - 📊 **SQLite Database** with comprehensive Vietnamese market schema
@@ -53,44 +78,44 @@ This repository provides:
 - 💻 **Platforms**: Windows & macOS supported
 - 📊 **Output**: SQLite database + Excel reports
 
-## 🚀 **Quick Start**
+# Getting Started
 
 1. Clone to home directory (NOT Desktop):
-   ```bash
-   git clone https://github.com/Qmqmmyay/DataFetcher.git ~/VNTrading_DataFetcher
-   cd ~/VNTrading_DataFetcher
-   ```
+```bash
+git clone https://github.com/Qmqmmyay/DataFetcher.git ~/VNTrading_DataFetcher
+cd ~/VNTrading_DataFetcher
+```
 
 2. Run setup and enable automation:
 
-   **macOS**:
-   ```bash
-   ./setup_new_computer.sh
-   ./setup_launchd.sh
-   ```
-
-   **Windows**:
-   ```batch
-   setup_new_computer.bat
-   python setup_launchd_win.py
-   ```
-
-👉 See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed setup instructions.
-
-## 📞 **Essential Commands**
-
 **macOS**:
 ```bash
-./run_etl.sh                           # Manual run
-tail -f RunningLog/cron_etl.log        # View logs
-./uninstall_launchd.sh                 # Stop automation
+./setup_new_computer.sh
+./setup_launchd.sh
 ```
 
 **Windows**:
 ```batch
-run_etl.bat                            # Manual run
-type RunningLog\cron_etl.log          # View logs
-uninstall_task.bat                     # Stop automation
+setup_new_computer.bat
+python setup_launchd_win.py
+```
+
+👉 See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed setup instructions.
+
+# Essential Commands
+
+**macOS**:
+```bash
+./run_etl.sh              # Manual run
+tail -f RunningLog/cron_etl.log  # View logs
+./uninstall_launchd.sh    # Stop automation
+```
+
+**Windows**:
+```batch
+run_etl.bat              # Manual run
+type RunningLog\cron_etl.log    # View logs
+uninstall_task.bat      # Stop automation
 ```
 
 👉 See [TRANSFER_CHECKLIST.md](TRANSFER_CHECKLIST.md) for complete command reference.
