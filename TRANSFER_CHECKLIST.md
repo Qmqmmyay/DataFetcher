@@ -65,13 +65,13 @@ cd ~/VNTrading_DataFetcher
 #### Windows Testing:
 ```powershell
 # Test manual run
-python scripts/main_etl_runner.py
+run_etl.bat
 
 # Check scheduled task
-schtasks /query /tn "VNTrading Data Fetcher"
+schtasks /query /tn VNTrading_DataFetcher_ETL
 
 # Monitor logs
-Get-Content -Path logs\fetcher.log -Wait
+type RunningLog\cron_etl.log
 ```
 
 #### macOS Testing:
@@ -88,11 +88,17 @@ tail -f RunningLog/cron_etl.log
 
 ## 🕒 What Happens After Setup
 
-- **Daily at 15:00 (3:00 PM)**: Automatically fetches Vietnamese stock data
-- **Weekdays**: Price + intraday data  
-- **Quarterly**: Company + financial data
-- **Weekends**: Skipped (unless quarterly)
-- **Logs**: Saved in `RunningLog/` folder
+- **Automated Task**:
+  - Windows: Task Scheduler runs `run_etl.bat`
+  - macOS: LaunchAgent runs `run_etl.sh`
+- **Schedule**:
+  - Daily at 15:00 (3:00 PM)
+  - Weekdays: Price + intraday data  
+  - Quarterly (11th of Jan/Apr/Jul/Oct): Company + financial data
+  - Weekends: Skipped (unless quarterly)
+- **Monitoring**:
+  - Logs: Saved in `RunningLog/` folder
+  - Status checks: Use platform-specific commands
 
 ## 🆘 Troubleshooting
 
@@ -113,7 +119,7 @@ Set-ExecutionPolicy RemoteSigned
 .\setup_new_computer.bat
 
 # Task Scheduler issues:
-schtasks /delete /tn "VNTrading Data Fetcher" /f
+uninstall_task.bat
 python setup_launchd_win.py
 ```
 
@@ -138,10 +144,11 @@ cd ~/VNTrading_DataFetcher
 |------|---------|
 | Setup | Right-click `setup_new_computer.bat` > Run as administrator |
 | Enable automation | `python setup_launchd_win.py` |
-| Manual run | `python scripts/main_etl_runner.py` |
-| Check status | `schtasks /query /tn "VNTrading Data Fetcher"` |
-| View logs | `type logs\fetcher.log` |
-| Stop automation | `schtasks /delete /tn "VNTrading Data Fetcher" /f` |
+| Manual run | `run_etl.bat` |
+| Check status | `schtasks /query /tn VNTrading_DataFetcher_ETL` |
+| View logs | `type RunningLog\cron_etl.log` |
+| Stop automation | `uninstall_task.bat` |
+| Validate setup | `validate_transfer.bat` |
 
 ### macOS Commands
 
@@ -153,6 +160,7 @@ cd ~/VNTrading_DataFetcher
 | Check status | `launchctl list \| grep vntrading` |
 | View logs | `tail -f RunningLog/cron_etl.log` |
 | Stop automation | `./uninstall_launchd.sh` |
+| Validate setup | `./validate_transfer.sh` |
 
 ---
 
