@@ -1,0 +1,5 @@
+home = /Users/doquangmanh/Desktop/ASLAB/VNTrading/VNTrading_env
+include-system-site-packages = false
+version = 3.12.3
+executable = /Users/doquangmanh/.pyenv/shims/python3
+command = /Users/doquangmanh/.pyenv/versions/3.12.3/bin/python3 -m venv --upgrade-deps /Users/doquangmanh/VNTrading_DataFetcher/VNTrading_env
