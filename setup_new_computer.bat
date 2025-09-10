@@ -176,7 +176,7 @@ if "%VN_PACKAGES_AVAILABLE%"=="true" (
 echo.
 echo 📋 Next steps:
 echo    1. Test manual ETL run: python scripts/main_etl_runner.py
-echo    2. Set up automated scheduling: python setup_windows_task.py
+echo    2. Set up automated scheduling: python setup_launchd_win.py
 echo    3. Monitor logs: type logs\fetcher.log
 echo.
 echo 💡 Useful commands:
