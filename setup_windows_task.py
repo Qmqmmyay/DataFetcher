@@ -11,11 +11,22 @@ def create_scheduled_task():
     # Get the current script's directory
     base_dir = Path(__file__).parent.absolute()
     
-    # Path to the Python executable in the virtual environment
-    venv_python = base_dir / "VNTrading_env" / "Scripts" / "python.exe"
+    # Path to the batch script
+    etl_script = base_dir / "run_etl.bat"
     
-    # Path to the ETL script
-    etl_script = base_dir / "scripts" / "main_etl_runner.py"
+    # Create logs directory
+    log_dir = base_dir / "RunningLog"
+    log_dir.mkdir(exist_ok=True)
+    print(f"✅ Created logs directory: {log_dir}")
+    
+    # Ensure the batch script exists
+    if not etl_script.exists():
+        print(f"❌ Error: ETL script not found at {etl_script}")
+        sys.exit(1)
+        
+    print("🚀 Setting up VNTrading ETL Windows Task...")
+    print(f"📁 Project directory: {base_dir}")
+    print(f"📜 ETL script: {etl_script}")
     
     # Create the XML for the scheduled task
     task_xml = f'''<?xml version="1.0" encoding="UTF-16"?>
@@ -57,8 +68,7 @@ def create_scheduled_task():
   </Settings>
   <Actions Context="Author">
     <Exec>
-      <Command>"{venv_python}"</Command>
-      <Arguments>"{etl_script}"</Arguments>
+      <Command>"{etl_script}"</Command>
       <WorkingDirectory>{base_dir}</WorkingDirectory>
     </Exec>
   </Actions>
@@ -77,8 +87,36 @@ def create_scheduled_task():
             "/xml", str(xml_path), "/f"
         ], check=True)
         print(f"✅ Successfully created scheduled task: {task_name}")
+        
+        # Run the task immediately for testing (equivalent to RunAtLoad)
+        print("🔄 Running immediate test...")
+        subprocess.run(["schtasks", "/run", "/tn", task_name], check=True)
+        print("✅ Task triggered for immediate test run")
+        
+        # Verify task exists and show status
+        verify_result = subprocess.run(
+            ["schtasks", "/query", "/tn", task_name],
+            capture_output=True, text=True, check=True
+        )
+        print("✅ Task is now active")
+        
+        print("\n🎉 Setup complete!")
+        print("\n📋 Task Configuration:")
+        print(f"   • Name: {task_name}")
+        print("   • Schedule: Daily at 15:00 (3:00 PM)")
+        print(f"   • Script: {etl_script}")
+        print(f"   • Logs: {log_dir}")
+        print("\n🔧 Management commands:")
+        print(f"   • Check status: schtasks /query /tn {task_name}")
+        print(f"   • Run manually: schtasks /run /tn {task_name}")
+        print(f"   • Delete task: schtasks /delete /tn {task_name} /f")
+        print("\n⚠️  Note: The ETL will run immediately once and then daily at 15:00")
+        print("   If current time is before 15:00, it will be blocked by the time check in run_etl.bat")
+        
     except subprocess.CalledProcessError as e:
         print(f"❌ Error creating scheduled task: {e}")
+        print(f"Error output: {e.stderr if hasattr(e, 'stderr') else 'No error output'}")
+        sys.exit(1)
     finally:
         # Clean up the temporary XML file
         os.remove(xml_path)
