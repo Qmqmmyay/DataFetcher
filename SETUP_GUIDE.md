@@ -111,7 +111,31 @@ python setup_windows_task.py
 
 ## 🔧 **Manual Setup Options**
 
-### **Option A: Fresh Installation**
+### **Option A: Preserve Offline Packages (Recommended)** 
+
+#### Both Systems:
+```bash
+# Update virtual environment paths while keeping packages
+python3 -m venv VNTrading_env --upgrade-deps
+source VNTrading_env/bin/activate  # or .\VNTrading_env\Scripts\activate on Windows
+
+# Verify Vietnamese packages are preserved
+python -c "import vnstock_ta, vnai, vnii; print('✅ Offline packages preserved!')"
+```
+
+This is the recommended option as it preserves the pre-installed Vietnamese packages that are not available on PyPI. The virtual environment in this repository includes:
+
+- 📊 `vnstock` (3.2.6) - Vietnamese stock data APIs
+- 📈 `vnstock_ta` (0.1.1) - Technical analysis for VN market  
+- 📉 `vnstock_data` (2.0.7) - VN market data pipelines
+- 📋 `vnstock_ezchart` (0.0.2) - VN market visualization
+- 🔄 `vnstock_pipeline` (2.0) - VN data processing workflows
+- 🤖 `vnai` (2.0.4) - Vietnamese AI trading tools
+- 🧠 `vnii` (0.0.7) - VN investment intelligence
+
+### **Option B: Fresh Installation (Not Recommended)**
+
+⚠️ Only use this if Option A fails. This will remove offline Vietnamese packages that cannot be reinstalled.
 
 #### macOS:
 ```bash
@@ -162,13 +186,15 @@ foreach ($pkg in @("vnstock_data","vnstock_pipeline","vnstock_ta","vnii")) {
 cd ..  # Return to main directory
 ```
 
-### **Option B: Verify Installation**
+### **Option C: Verify Installation**
 
 #### Both Systems:
 ```python
 # Test importing all packages
 python -c "import vnstock_data, vnstock_pipeline, vnstock_ta, vnii; print('✅ All packages working!')"
 ```
+
+⚠️ **If packages fail to import**: Use Option A to fix paths while preserving the packages. Only use Option B as a last resort since it removes offline packages.
 
 ---
 
