@@ -86,14 +86,35 @@ source VNTrading_env/bin/activate
 python -c "import vnstock_ta, vnai, vnii; print('✅ Offline packages preserved!')"
 ```
 
-### **Option B: Fresh Installation (⚠️ Loses Vietnamese Packages)**
+### **Option B: Fresh Installation with Vietnamese Packages**
 ```bash
-# WARNING: This destroys offline Vietnamese packages!
+# 1. Create fresh virtual environment
 rm -rf VNTrading_env
 python3 -m venv VNTrading_env
 source VNTrading_env/bin/activate
+
+# 2. Install base requirements
 pip install -r requirements.txt
-# Result: Only basic packages, no advanced Vietnamese tools
+
+# 3. Clone and install Vietnamese packages
+mkdir -p vietnamese_packages && cd vietnamese_packages
+
+# Clone all Vietnamese packages
+git clone https://github.com/Qmqmmyay/vnstock_data.git
+git clone https://github.com/Qmqmmyay/vnstock_pipeline.git
+git clone https://github.com/Qmqmmyay/vnstock_ta.git
+git clone https://github.com/Qmqmmyay/vnii.git
+
+# Install each package in development mode
+cd vnstock_data && pip install -e . && cd ..
+cd vnstock_pipeline && pip install -e . && cd ..
+cd vnstock_ta && pip install -e . && cd ..
+cd vnii && pip install -e . && cd ..
+
+cd ..  # Return to main directory
+
+# 4. Verify installation
+python -c "import vnstock_data, vnstock_pipeline, vnstock_ta, vnii; print('✅ Vietnamese packages installed successfully!')"
 ```
 
 ---
