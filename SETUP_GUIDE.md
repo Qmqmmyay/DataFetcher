@@ -282,21 +282,59 @@ VNTrading_DataFetcher/                    # 760MB total
 ## 🔄 **Daily Automation Setup**
 
 ### **Enable Automated Execution**
+
+#### macOS:
 ```bash
 ./setup_launchd.sh
 ```
 
-**What this creates:**
-- macOS LaunchAgent that runs daily at 15:00 (3:00 PM)
-- Automatic data collection from Vietnamese stock markets
-- Excel reports generated in `RunningLog/` directory
-- Comprehensive logging for monitoring
+> Creates a LaunchAgent for automated execution through macOS's native service manager.
 
-### **Automation Schedule:**
-- **Daily at 15:00** - Automated execution
-- **Weekdays**: Fetch price + intraday data
-- **Quarterly (11th of Jan/Apr/Jul/Oct)**: Also fetch company + finance data  
-- **Weekends**: Skip execution (unless quarterly date)
+#### Windows:
+```bash
+python setup_windows_task.py
+```
+
+> Creates a Scheduled Task using Windows Task Scheduler. Uses Python for reliable XML configuration and UAC handling.
+
+### **Common Features Across Platforms:**
+- ⏰ **Scheduling**: Runs daily at 15:00 (3:00 PM)
+- 📊 **Data Collection**: Automated fetching from Vietnamese stock markets
+- 📈 **Reports**: Excel files generated in `RunningLog/` directory
+- 📝 **Logging**: Comprehensive logs for monitoring and troubleshooting
+- 🔒 **Security**: Proper system integration (LaunchAgent/Task Scheduler)
+
+### **Task Management:**
+
+#### macOS Commands:
+```bash
+# Check status
+launchctl list | grep vntrading
+
+# Manually run
+./run_etl.sh
+
+# Remove automation
+./uninstall_launchd.sh
+```
+
+#### Windows Commands:
+```batch
+:: Check status
+schtasks /query /tn VNTrading_DataFetcher_ETL
+
+:: Manually run
+run_etl.bat
+
+:: Remove automation
+uninstall_task.bat
+```
+
+### **Automation Schedule (Both Platforms):**
+- **Daily Execution**: 15:00 (3:00 PM)
+- **Weekday Tasks**: Price data + intraday metrics
+- **Quarterly Updates**: Company & finance data (11th of Jan/Apr/Jul/Oct)
+- **Weekend Behavior**: Skips execution (except on quarterly dates)
 
 ### **Monitor Automation**
 ```bash
