@@ -32,7 +32,7 @@ This repository includes a **578MB virtual environment** with **offline Vietname
 
 | Requirement | Details |
 |-------------|---------|
-| **Operating System** | macOS only (LaunchAgent automation) |
+| **Operating System** | macOS or Windows |
 | **Python Version** | **3.12+ REQUIRED** (virtual env built with Python 3.12) |
 | **⚠️ Version Compatibility** | **Other Python versions (3.10, 3.11) may cause binary incompatibility** |
 | **Required Location** | `/Users/username/VNTrading_DataFetcher` |
