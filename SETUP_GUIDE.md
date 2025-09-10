@@ -1,4 +1,4 @@
-# 🇻🇳 VNTrading DataFetcher - Complete macOS Setup Guide
+# 🇻🇳 VNTrading DataFetcher - Complete Setup Guide
 
 > **Automated Vietnamese Stock Market Data Collection & Analysis System**
 
@@ -43,9 +43,11 @@ This repository includes a **578MB virtual environment** with **offline Vietname
 
 ---
 
-## ⚡ **Quick Setup (3 Steps - Recommended)**
+## ⚡ **Quick Setup (3 Steps)**
 
-### **Step 1: Clone Repository**
+### **Step 1: Prerequisites & Clone**
+
+#### macOS:
 ```bash
 # Clone to your home directory (NOT Desktop!)
 cd /Users/$(whoami)/
@@ -53,68 +55,119 @@ git clone https://github.com/Qmqmmyay/DataFetcher.git VNTrading_DataFetcher
 cd VNTrading_DataFetcher
 ```
 
+#### Windows:
+```powershell
+# 1. Install Python 3.12+ from python.org (✅ Check "Add Python to PATH")
+# 2. Install Git from git-scm.com
+# 3. Install Windows components
+pip install pywin32 wheel setuptools
+
+# Clone repository
+cd %USERPROFILE%
+git clone https://github.com/Qmqmmyay/DataFetcher.git VNTrading_DataFetcher
+cd VNTrading_DataFetcher
+```
+
 ### **Step 2: Run Setup Script**
+
+#### macOS:
 ```bash
 # This script is SAFE and preserves Vietnamese packages
 ./setup_new_computer.sh
 ```
 
-**What the script does:**
-- ✅ Preserves existing virtual environment with offline VN packages
-- ✅ Updates Python paths for your system using `--upgrade-deps`
-- ✅ Detects Vietnamese packages and skips unnecessary installation
-- ✅ Tests all components to ensure everything works
-- ✅ Creates necessary directories and makes scripts executable
+#### Windows:
+```powershell
+# Run the Windows setup script
+.\setup_new_computer.bat
+```
+
+**What the scripts do:**
+- ✅ Create and configure Python virtual environment
+- ✅ Install base requirements
+- ✅ Clone and install Vietnamese packages from GitHub:
+  - vnstock_data
+  - vnstock_pipeline
+  - vnstock_ta
+  - vnii
+- ✅ Test all components to ensure everything works
+- ✅ Create necessary directories and configure permissions
 
 ### **Step 3: Setup Automation**
+
+#### macOS:
 ```bash
-# Enable daily automated execution at 3:00 PM
+# Enable daily automated execution via launchd
 ./setup_launchd.sh
+```
+
+#### Windows:
+```powershell
+# Enable daily automated execution via Task Scheduler
+python setup_windows_task.py
 ```
 
 ---
 
 ## 🔧 **Manual Setup Options**
 
-### **Option A: Preserve Offline Packages (Recommended)**
-```bash
-# Update virtual environment paths while keeping packages
-python3 -m venv VNTrading_env --upgrade-deps
-source VNTrading_env/bin/activate
+### **Option A: Fresh Installation**
 
-# Verify Vietnamese packages are preserved
-python -c "import vnstock_ta, vnai, vnii; print('✅ Offline packages preserved!')"
-```
-
-### **Option B: Fresh Installation with Vietnamese Packages**
+#### macOS:
 ```bash
-# 1. Create fresh virtual environment
-rm -rf VNTrading_env
+# 1. Create virtual environment
 python3 -m venv VNTrading_env
 source VNTrading_env/bin/activate
 
-# 2. Install base requirements
+# 2. Install requirements
 pip install -r requirements.txt
 
-# 3. Clone and install Vietnamese packages
+# 3. Install Vietnamese packages
 mkdir -p vietnamese_packages && cd vietnamese_packages
-
-# Clone all Vietnamese packages
 git clone https://github.com/Qmqmmyay/vnstock_data.git
 git clone https://github.com/Qmqmmyay/vnstock_pipeline.git
 git clone https://github.com/Qmqmmyay/vnstock_ta.git
 git clone https://github.com/Qmqmmyay/vnii.git
 
-# Install each package in development mode
-cd vnstock_data && pip install -e . && cd ..
-cd vnstock_pipeline && pip install -e . && cd ..
-cd vnstock_ta && pip install -e . && cd ..
-cd vnii && pip install -e . && cd ..
+# Install in development mode
+for pkg in vnstock_data vnstock_pipeline vnstock_ta vnii; do
+    cd $pkg && pip install -e . && cd ..
+done
 
 cd ..  # Return to main directory
+```
 
-# 4. Verify installation
-python -c "import vnstock_data, vnstock_pipeline, vnstock_ta, vnii; print('✅ Vietnamese packages installed successfully!')"
+#### Windows:
+```powershell
+# 1. Create virtual environment
+python -m venv VNTrading_env
+.\VNTrading_env\Scripts\activate
+
+# 2. Install requirements
+pip install -r requirements.txt
+
+# 3. Install Vietnamese packages
+mkdir vietnamese_packages
+cd vietnamese_packages
+git clone https://github.com/Qmqmmyay/vnstock_data.git
+git clone https://github.com/Qmqmmyay/vnstock_pipeline.git
+git clone https://github.com/Qmqmmyay/vnstock_ta.git
+git clone https://github.com/Qmqmmyay/vnii.git
+
+# Install in development mode
+foreach ($pkg in @("vnstock_data","vnstock_pipeline","vnstock_ta","vnii")) {
+    cd $pkg; pip install -e .; cd ..
+}
+
+cd ..  # Return to main directory
+```
+
+### **Option B: Verify Installation**
+
+#### Both Systems:
+```python
+# Test importing all packages
+python -c "import vnstock_data, vnstock_pipeline, vnstock_ta, vnii; print('✅ All packages working!')"
 ```
 
 ---
