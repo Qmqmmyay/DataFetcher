@@ -110,7 +110,7 @@ cd VNTrading_DataFetcher
 #### Windows:
 ```powershell
 # Enable daily automated execution via Task Scheduler
-python setup_windows_task.py
+python setup_launchd_win.py
 ```
 
 ---
@@ -292,7 +292,7 @@ VNTrading_DataFetcher/                    # 760MB total
 
 #### Windows:
 ```bash
-python setup_windows_task.py
+python setup_launchd_win.py
 ```
 
 > Creates a Scheduled Task using Windows Task Scheduler. Uses Python for reliable XML configuration and UAC handling.

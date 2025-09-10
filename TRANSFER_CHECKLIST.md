@@ -36,7 +36,7 @@ C:\Users\YourUsername\VNTrading_DataFetcher
 
 3. Enable Daily Automation
 ```powershell
-python setup_windows_task.py
+python setup_launchd_win.py
 ```
 
 #### macOS Users:
@@ -114,7 +114,7 @@ Set-ExecutionPolicy RemoteSigned
 
 # Task Scheduler issues:
 schtasks /delete /tn "VNTrading Data Fetcher" /f
-python setup_windows_task.py
+python setup_launchd_win.py
 ```
 
 ### macOS-Specific:
@@ -137,7 +137,7 @@ cd ~/VNTrading_DataFetcher
 | Task | Command |
 |------|---------|
 | Setup | Right-click `setup_new_computer.bat` > Run as administrator |
-| Enable automation | `python setup_windows_task.py` |
+| Enable automation | `python setup_launchd_win.py` |
 | Manual run | `python scripts/main_etl_runner.py` |
 | Check status | `schtasks /query /tn "VNTrading Data Fetcher"` |
 | View logs | `type logs\fetcher.log` |

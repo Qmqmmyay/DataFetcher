@@ -15,7 +15,7 @@ rem Check essential files
 echo 📋 Checking required files...
 set REQUIRED_FILES=^
     setup_new_computer.bat^
-    setup_windows_task.py^
+    setup_launchd_win.py^
     run_etl.bat^
     requirements.txt^
     core\database.py^
@@ -62,7 +62,7 @@ echo.
 echo 🎉 Transfer validation successful!
 echo 📝 Next steps:
 echo    1. Run: setup_new_computer.bat
-echo    2. Run: setup_windows_task.py
+echo    2. Run: setup_launchd_win.py
 echo    3. Test: run_etl.bat
 
 endlocal
