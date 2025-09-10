@@ -1,6 +1,12 @@
 # 🇻🇳 VNTrading DataFetcher - Complete Setup Guide
 
-> **Automated Vietnamese Stock Market Data Collection & Analysis System**
+> **Automated Vietnamese St#### Windows:
+
+```bash
+python setup_windows_task.py
+```
+
+> **Note**: The Windows task scheduler setup uses Python (`.py`) instead of a batch file (`.bat`) because it requires complex XML configuration, UAC elevation handling, and robust error management that would be unreliable in a batch script. This ensures the most reliable and maintainable setup process on Windows systems.k Market Data Collection & Analysis System**
 
 ## 🚨 **CRITICAL: Read This First**
 
