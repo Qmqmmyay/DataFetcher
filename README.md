@@ -1,4 +1,13 @@
-# 🇻🇳 VNTrading DataFetcher
+# 🇻🇳- 🚨 **What Makes This Project Special**
+
+This repository is **unique** because it contains:
+
+- 📦 **578MB Virtual Environment** with offline Vietnamese trading packages
+- 🇻🇳 **Specialized VN Market Libraries** not available on PyPI
+- 🤖 **Cross-Platform Automated Collection** (Windows & macOS)
+- 📊 **SQLite Database** with comprehensive Vietnamese market schema
+- 📋 **Excel Reports** generated automatically
+- 🔄 **Production-Ready ETL Pipeline** with error handling DataFetcher
 
 > **Automated Vietnamese Stock Market Data Collection & Analysis System**
 
@@ -29,11 +38,11 @@ This repository is **unique** because it contains:
 
 ## 🎯 **Key Features**
 
-- ✅ **Automated Daily Collection** - Runs at 3:00 PM using macOS LaunchAgent
+- ✅ **Cross-Platform Automation** - Daily runs at 3:00 PM on both Windows & macOS
 - 📊 **Vietnamese Market Focus** - HOSE, HNX, UPCOM exchanges
 - 🗄️ **SQLite Database Storage** - 6 tables with proper schema
 - 📋 **Excel Report Generation** - Daily automated reports
-- 🖥️ **macOS Integration** - Native LaunchAgent scheduling
+- 🖥️ **Native Integration** - Uses Task Scheduler (Windows) & LaunchAgent (macOS)
 - 🛠️ **Offline Package Support** - No external dependencies
 - 🔄 **Error Handling** - Comprehensive logging and recovery
 - 📈 **Technical Analysis** - Built-in VN market indicators
@@ -65,20 +74,38 @@ cd VNTrading_DataFetcher
 ```
 
 ### **Step 3: Enable Automation**
+
+#### macOS:
 ```bash
 # Set up daily execution at 3:00 PM
 ./setup_launchd.sh
 ```
 
+#### Windows:
+```bash
+# Set up daily execution at 3:00 PM
+python setup_launchd_win.py
+```
+
 ### **Step 4: Test Everything**
+
+#### macOS:
 ```bash
 # Manual test run
 ./run_etl.sh
 ```
 
+#### Windows:
+```bash
+# Manual test run
+run_etl.bat
+```
+
 ## 📞 **Command Reference**
 
 ### **Essential Commands**
+
+#### macOS:
 ```bash
 # Setup and run
 ./setup_new_computer.sh     # Initial setup (preserves VN packages)
@@ -93,6 +120,22 @@ tail -f RunningLog/cron_etl.log       # View real-time logs
 ./uninstall_launchd.sh     # Stop automation
 ./validate_transfer.sh     # Validate setup
 ./cleanup_old_launchd.sh   # Clean old processes
+```
+
+#### Windows:
+```batch
+:: Setup and run
+setup_new_computer.bat     # Initial setup (preserves VN packages)
+python setup_launchd_win.py  # Enable daily automation
+run_etl.bat               # Manual ETL execution
+
+:: Monitoring
+schtasks /query /tn VNTrading_DataFetcher_ETL  # Check automation status
+type RunningLog\cron_etl.log                   # View logs
+
+:: Control
+uninstall_task.bat        # Stop automation
+validate_transfer.bat     # Validate setup
 ```
 
 ### **Troubleshooting**
@@ -112,9 +155,13 @@ sqlite3 data/trading_system.db ".tables"
 
 ```
 VNTrading_DataFetcher/
-├── 🚀 setup_new_computer.sh          # Main setup script
-├── ⏰ setup_launchd.sh               # Automation setup
-├── 🔄 run_etl.sh                     # ETL execution
+├── 🚀 setup_new_computer.sh/bat      # Main setup script (macOS/Windows)
+├── ⏰ setup_launchd.sh               # macOS automation setup
+├── ⏰ setup_launchd_win.py           # Windows automation setup
+├── 🔄 run_etl.sh/bat                 # ETL execution (macOS/Windows)
+├── 🗑️ uninstall_launchd.sh          # macOS cleanup
+├── 🗑️ uninstall_task.bat            # Windows cleanup
+├── ✅ validate_transfer.sh/bat       # Setup validation (macOS/Windows)
 ├── 📂 config/                        # Configuration files
 ├── 📂 core/                          # ETL engine
 ├── 📂 scripts/                       # Main execution scripts
@@ -127,12 +174,15 @@ VNTrading_DataFetcher/
 
 ## 🖥️ **System Requirements**
 
-- **Operating System:** macOS (required for LaunchAgent)
+- **Operating System:** Windows or macOS
 - **Python Version:** 3.12+ (included in virtual environment)
-- **Location:** `/Users/username/` (NOT Desktop directory)
+- **Location:**
+  - macOS: `/Users/username/` (NOT Desktop directory)
+  - Windows: `C:\Users\username\` (NOT Desktop)
 - **Disk Space:** ~800MB free space
 - **Internet:** Required for Vietnamese market APIs
 - **Schedule:** Daily execution at 15:00 (3:00 PM)
+- **Permissions:** Admin rights for task scheduling setup
 
 ## 📚 **Documentation**
 
@@ -153,11 +203,12 @@ For detailed information, see these comprehensive guides:
 
 ## ⚠️ **Important Notes**
 
-- 🖥️ **macOS Only** - Uses macOS LaunchAgent for automation
+- 🖥️ **Cross-Platform Support** - Works on both Windows and macOS
 - 📁 **Location Critical** - Must be in home directory, NOT Desktop
 - 🔄 **Virtual Environment** - Never recreate from scratch (loses offline packages)
 - 🌐 **Internet Required** - Needs connection for Vietnamese market APIs
 - 📦 **Unique Packages** - Contains Vietnamese libraries not available elsewhere
+- 🔒 **Admin Rights** - Required for setting up automated tasks
 
 ## 🤝 **Contributing**
 
@@ -165,8 +216,9 @@ Contributions are welcome, but please:
 
 1. **Preserve Virtual Environment** - Do not modify `VNTrading_env/`
 2. **Test Vietnamese Functionality** - Ensure VN market features work
-3. **Maintain macOS Compatibility** - Test LaunchAgent automation
+3. **Cross-Platform Testing** - Verify both Windows and macOS functionality
 4. **Update Documentation** - Keep guides current with changes
+5. **Maintain Naming Convention** - Keep `.sh` and `.bat`/`.py` pairs consistent
 
 ## 📞 **Support**
 
@@ -175,7 +227,10 @@ For issues and troubleshooting:
 1. 📋 Check the **[Complete Setup Guide](SETUP_GUIDE.md)** for detailed instructions
 2. 📊 Review `RunningLog/cron_etl.log` for execution logs
 3. 🔍 Verify Vietnamese package imports work correctly
-4. 🖥️ Confirm macOS LaunchAgent status
+4. 🖥️ Check automation status:
+   - Windows: Task Scheduler status
+   - macOS: LaunchAgent status
+5. 🔒 Verify admin privileges for task scheduling
 
 ## 📄 **License**
 
@@ -183,4 +238,4 @@ This project includes specialized Vietnamese trading packages. Please respect th
 
 ---
 
-**🇻🇳 Built for Vietnamese Stock Market | 🖥️ Optimized for macOS | 📊 Production Ready**
+**🇻🇳 Built for Vietnamese Stock Market | 🖥️ Windows & macOS Support | 📊 Production Ready**
